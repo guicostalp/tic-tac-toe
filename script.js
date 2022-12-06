@@ -13,13 +13,15 @@ const WINNING_COMBINATIONS = [
 const cellElements = document.querySelectorAll('[data-cell]')
 const board = document.getElementById('board')
 const restartGame = document.getElementById('winning-message')
+const winningMessage = document.querySelector('[data-winning-message-text]')
 
-let circleTurn //circleTurn is true by default
+
+let circleTurn //circleTurn is true by default (boolean var)
 
 startGame()
 
 function startGame (){
-    circleTurn = false
+    circleTurn = false //set first player, in this case 'x' (circletTurn = false)
     cellElements.forEach(cell => {
 
         cell.addEventListener('click', handleClick, {once: true}) //once: true mean to add event listener only once on cell (if clicked twice nothing happen)
@@ -36,12 +38,14 @@ function handleClick(e) {
     placeMark(cell, currentClass)
     
     if (checkWin(currentClass)) {
-
-        restartGame.classList.add('show')
+        endGame(false)
+    } else if (isDraw()) {
+        endGame(true)
+    } else {
+        switchTurn()
+        setBoardHoverClass()
 
     }
-    switchTurn()
-    setBoardHoverClass()
 
 }
 
@@ -59,6 +63,33 @@ function checkWin(currentClass) {
         })
     })
 
+
+}
+
+function endGame(draw) {
+
+    if (draw) {
+
+        winningMessage.innerHTML = "It's a draw!"
+
+    } else {
+
+        winningMessage.innerHTML = `${circleTurn ? "Circle " : "X"} is the winner`
+
+    }
+    
+    restartGame.classList.add('show')
+
+}
+
+function isDraw () {
+            //DECONSTRUCT cellElements and transforms in array
+            //for cell looks for class, either circle or x
+
+    return [...cellElements].every(cell => {
+        return cell.classList.contains(X_CLASS) || 
+        cell.classList.contains(CIRCLE_CLASS)
+    })
 
 }
 
