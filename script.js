@@ -14,6 +14,27 @@ const cellElements = document.querySelectorAll('[data-cell]')
 const board = document.getElementById('board')
 const restartGame = document.getElementById('winning-message')
 const winningMessage = document.querySelector('[data-winning-message-text]')
+const restartButton = document.getElementById('restartButton')
+let xScore = 0
+let circleScore = 0
+
+restartButton.addEventListener ('click', restartBoard)
+
+function restartBoard() {
+
+    restartGame.classList.remove('show')
+    cellElements.forEach(cell => {
+
+        cell.classList.remove(X_CLASS)
+        cell.classList.remove(CIRCLE_CLASS)
+        cell.removeEventListener('click', handleClick)
+
+    })
+
+    startGame()
+
+}
+
 
 
 let circleTurn //circleTurn is true by default (boolean var)
@@ -68,17 +89,51 @@ function checkWin(currentClass) {
 
 function endGame(draw) {
 
+
+
+
     if (draw) {
 
         winningMessage.innerHTML = "It's a draw!"
 
     } else {
 
-        winningMessage.innerHTML = `${circleTurn ? "Circle " : "X"} is the winner`
-
+        winningMessage.innerHTML = `${circleTurn ? "Circle " : "X"} won this time!`
+        if (circleTurn) {
+            const circle = document.getElementById('circle-score')
+            circleScore += 1
+            circle.innerHTML = `Circle: ${circleScore}`
+        
+        } else {
+            const x = document.getElementById('x-score')
+            xScore += 1
+            x.innerHTML = `X: ${xScore}`
+        
+        }
     }
-    
+
+
+
+    if (xScore == 3 || circleScore == 3) {
+
+        gameWinner()
+    }    
+
     restartGame.classList.add('show')
+
+}
+
+function gameWinner () {
+
+    winningMessage.innerHTML = `${circleTurn ? "Circle " : "X"} Won the game. Congratulations!`
+    xScore = 0
+    circleScore = 0
+    const x = document.getElementById('x-score')
+    const circle = document.getElementById('circle-score')    
+    x.innerHTML = `X: ${xScore}`
+    circle.innerHTML = `Circle: ${circleScore}`
+
+
 
 }
 
